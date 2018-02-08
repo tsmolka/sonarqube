@@ -1,0 +1,23 @@
+sonarqube {
+  properties {
+    property 'sonar.projectName', 'SonarQube :: Compute Engine'
+  }
+}
+
+dependencies {
+  compile project(':server:sonar-server')
+  compile 'org.nanohttpd:nanohttpd'
+  compile 'com.google.protobuf:protobuf-java'
+  compileOnly 'com.google.code.findbugs:jsr305'
+
+  testCompile 'junit:junit'
+  testCompile 'com.tngtech.java:junit-dataprovider'
+  testCompile 'org.assertj:assertj-core'
+  testCompile 'org.assertj:assertj-guava'
+  testCompile 'org.mockito:mockito-core'
+  testCompile project(':server:sonar-db-testing')
+  testCompile 'com.google.code.findbugs:jsr305'
+  testCompile 'com.h2database:h2'
+}
+
+artifactoryPublish.skip = true

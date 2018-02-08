@@ -1,0 +1,47 @@
+sonarqube {
+  skipProject = true
+}
+
+configurations {
+  testCompile.extendsFrom(compileOnly)
+}
+
+dependencies {
+  compile 'com.google.guava:guava'
+  compile 'commons-io:commons-io'
+  compile 'commons-lang:commons-lang'
+  compileOnly 'com.google.code.findbugs:jsr305'
+  compileOnly project(path: ':sonar-plugin-api', configuration: 'shadow')
+
+  testCompile 'junit:junit'
+  testCompile 'org.assertj:assertj-core'
+  testCompile 'org.mockito:mockito-core'
+}
+
+jar {
+  manifest {
+    attributes(
+      'Plugin-Key': 'xoo',
+      'Plugin-Version': project.version,
+      'Plugin-Class': 'org.sonar.xoo.XooPlugin',
+      'Plugin-ChildFirstClassLoader': 'false',
+      'Sonar-Version': project.version,
+      'SonarLint-Supported': 'true',
+      'Plugin-Name': 'Xoo'
+    )
+  }
+  into('META-INF/lib') {
+    from configurations.compile
+  }
+}
+
+artifactoryPublish.skip = false
+
+apply plugin: 'maven-publish'
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      from components.java
+    }
+  }
+}

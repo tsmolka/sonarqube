@@ -1,0 +1,13 @@
+sonarqube {
+  properties {
+    property 'sonar.projectName', 'SonarQube :: Check API'
+  }
+}
+
+dependencies {
+  compileOnly 'com.google.code.findbugs:jsr305'
+
+  testCompile 'junit:junit'
+}
+
+artifactoryPublish.skip = true

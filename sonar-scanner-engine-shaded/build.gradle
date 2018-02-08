@@ -1,0 +1,13 @@
+sonarqube {
+  properties {
+    property 'sonar.projectName', 'SonarQube :: Scanner Engine Shaded'
+  }
+}
+
+apply plugin: 'com.github.johnrengelman.shadow'
+
+dependencies {
+  compile project(':sonar-scanner-engine')
+}
+
+artifactoryPublish.skip = true

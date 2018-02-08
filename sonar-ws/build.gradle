@@ -1,0 +1,37 @@
+sonarqube {
+  properties {
+    property 'sonar.projectName', 'SonarQube :: Web Service'
+    property 'sonar.exclusions', 'src/main/java/org/sonarqube/ws/client/*/*.java'
+  }
+}
+
+configurations {
+  testCompile.extendsFrom(compileOnly)
+}
+
+dependencies {
+  compile 'com.google.protobuf:protobuf-java'
+  compile 'com.google.guava:guava'
+  compile 'com.squareup.okhttp3:okhttp'
+  compile 'commons-io:commons-io'
+  compileOnly 'com.google.code.findbugs:jsr305'
+  compileOnly project(path: ':sonar-plugin-api', configuration: 'shadow')
+
+  testCompile 'junit:junit'
+  testCompile 'org.assertj:assertj-core'
+  testCompile 'org.mockito:mockito-core'
+  testCompile project(':sonar-testing-harness')
+  testCompile 'com.squareup.okhttp3:mockwebserver'
+  testCompile 'commons-lang:commons-lang'
+}
+
+artifactoryPublish.skip = false
+
+apply plugin: 'maven-publish'
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      from components.java
+    }
+  }
+}

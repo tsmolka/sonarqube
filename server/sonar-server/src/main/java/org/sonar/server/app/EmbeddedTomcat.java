@@ -61,6 +61,7 @@ class EmbeddedTomcat {
       tomcat.start();
       new TomcatStartupLogs(Loggers.get(getClass())).log(tomcat);
     } catch (LifecycleException e) {
+      e.printStackTrace();
       Throwables.propagate(e);
     }
   }

@@ -1,0 +1,79 @@
+sonarqube {
+  properties {
+    property 'sonar.projectName', 'SonarQube :: Plugin API'
+  }
+}
+
+apply plugin: 'com.github.johnrengelman.shadow'
+
+dependencies {
+  compile 'com.google.code.gson:gson'
+  compile 'com.google.guava:guava'
+  compile 'commons-codec:commons-codec'
+  compile 'commons-io:commons-io'
+  compile 'commons-lang:commons-lang'
+
+  // shaded, but not relocated
+  compile project(':sonar-check-api')
+  compile(project(':sonar-duplications')) {
+    exclude group: 'org.slf4', module: 'slf4j-api'
+  }
+
+  // TODO not shaded
+  // TODO exclusions
+  shadow 'org.codehaus.woodstox:woodstox-core-lgpl'
+  shadow 'org.codehaus.woodstox:stax2-api'
+  shadow 'org.codehaus.staxmate:staxmate'
+
+  compileOnly 'com.google.code.findbugs:jsr305'
+  compileOnly 'org.slf4j:slf4j-api'
+  // TODO optional
+  compileOnly 'javax.servlet:javax.servlet-api'
+  // TODO optional
+  compileOnly 'ch.qos.logback:logback-classic'
+  // TODO optional
+  compileOnly 'ch.qos.logback:logback-core'
+  // TODO optional
+  compileOnly 'junit:junit'
+
+  testCompile 'com.tngtech.java:junit-dataprovider'
+  testCompile 'org.assertj:assertj-core'
+  testCompile 'org.mockito:mockito-core'
+  testCompile project(':sonar-testing-harness')
+}
+
+sourceSets {
+  // Make the compileOnly dependencies available when compiling/running tests
+  test.compileClasspath += configurations.compileOnly + configurations.shadow
+  test.runtimeClasspath += configurations.compileOnly + configurations.shadow
+}
+
+import org.apache.tools.ant.filters.ReplaceTokens
+processResources {
+  filter ReplaceTokens, tokens: [
+    // TODO review
+    'project.version': project.version,
+    'project.version.3digits': project.version.endsWith('SNAPSHOT') ? project.version : project.version.tokenize('.').take(3).join('.')
+  ]
+}
+
+shadowJar {
+  configurations = [project.configurations.default]
+  relocate('com.google', 'org.sonar.api.internal.google')
+  relocate('org.apache.commons', 'org.sonar.api.internal.apachecommons')
+  dependencies {
+      exclude(dependency('org.codehaus.woodstox:woodstox-core-lgpl'))
+      exclude(dependency('org.codehaus.woodstox:stax2-api'))
+      exclude(dependency('org.codehaus.staxmate:staxmate'))
+   }
+}
+artifactoryPublish.skip = false
+
+apply plugin: 'maven-publish'
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      artifact source: shadowJar, classifier: null
+    }
+  }
+}

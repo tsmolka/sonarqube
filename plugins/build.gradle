@@ -1,0 +1,5 @@
+sonarqube {
+  skipProject = true
+}
+
+artifactoryPublish.skip = true

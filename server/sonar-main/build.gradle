@@ -1,0 +1,29 @@
+sonarqube {
+  properties {
+    property 'sonar.projectName', 'SonarQube :: Main Process'
+  }
+}
+
+dependencies {
+  compile project(':server:sonar-process')
+  compile 'org.slf4j:slf4j-api'
+  compile 'org.apache.logging.log4j:log4j-to-slf4j'
+  compile 'org.apache.logging.log4j:log4j-api'
+  compile 'ch.qos.logback:logback-classic'
+  compile 'com.hazelcast:hazelcast'
+  compile 'com.hazelcast:hazelcast-client'
+  compile 'org.yaml:snakeyaml'
+  // Required by our usage of Guava for clustering : CeWorkerFactoryImpl.getClusteredWorkerUUIDs()
+  compile 'com.google.guava:guava'
+  compile 'org.elasticsearch.client:transport'
+  compileOnly 'com.google.code.findbugs:jsr305'
+
+  testCompile 'junit:junit'
+  testCompile 'org.assertj:assertj-core'
+  testCompile 'org.mockito:mockito-core'
+  testCompile project(':sonar-testing-harness')
+  testCompile 'com.tngtech.java:junit-dataprovider'
+  testCompile 'com.google.code.findbugs:jsr305'
+}
+
+artifactoryPublish.skip = true

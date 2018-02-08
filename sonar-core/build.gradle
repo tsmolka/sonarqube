@@ -1,0 +1,53 @@
+sonarqube {
+  properties {
+    property 'sonar.projectName', 'SonarQube :: Core'
+  }
+}
+
+configurations {
+  includeInResources
+}
+
+dependencies {
+  compileOnly 'com.google.code.findbugs:jsr305'
+  compile 'commons-codec:commons-codec'
+  compile 'org.apache.commons:commons-csv'
+  compile 'org.picocontainer:picocontainer'
+  compile 'com.google.protobuf:protobuf-java'
+  compile 'org.codehaus.sonar:sonar-classloader'
+  compile project(path: ':sonar-plugin-api', configuration: 'shadow')
+  compile 'org.sonarsource.update-center:sonar-update-center-common'
+  compile 'org.slf4j:slf4j-api'
+  compile 'ch.qos.logback:logback-classic'
+  compile 'ch.qos.logback:logback-core'
+
+  includeInResources project(path: ':sonar-plugin-api-deps', configuration: 'shadow')
+
+  testCompile 'junit:junit'
+  testCompile 'org.assertj:assertj-core'
+  testCompile 'com.tngtech.java:junit-dataprovider'
+  testCompile 'org.mockito:mockito-core'
+  testCompile project(':sonar-testing-harness')
+  testCompile 'org.simpleframework:simple:4.1.21'
+  testCompileOnly 'com.google.code.findbugs:jsr305'
+}
+
+// FIXME what's this?
+processResources {
+  into('/') {
+    from configurations.includeInResources
+    // TODO cache not invalidated when pattern changes?
+    rename '(.*)-' + project.version + '-all.jar', '$1.jar'
+  }
+}
+
+// Used by sonar-db-core to run DB Unit Tests
+artifactoryPublish.skip = false
+apply plugin: 'maven-publish'
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      from components.java
+    }
+  }
+}

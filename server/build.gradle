@@ -1,0 +1,7 @@
+sonarqube {
+  properties {
+    property 'sonar.projectName', 'SonarQube :: Server :: Parent'
+  }
+}
+
+artifactoryPublish.skip = true

@@ -1,0 +1,13 @@
+ext {
+  release = false
+}
+
+repositories {
+  maven {
+    url "https://repox.sonarsource.com/sonarsource"
+    credentials {
+      username System.env.'ARTIFACTORY_PRIVATE_USERNAME'
+      password System.env.'ARTIFACTORY_PRIVATE_PASSWORD'
+    }
+  }
+}

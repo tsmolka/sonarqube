@@ -1,0 +1,23 @@
+sonarqube {
+  properties {
+    property 'sonar.projectName', 'SonarQube :: Priviledged Plugin Bridge'
+  }
+}
+
+dependencies {
+  compile project(path: ':sonar-plugin-api', configuration: 'shadow')
+  compile project(':sonar-core')
+  compileOnly 'com.google.code.findbugs:jsr305'
+}
+
+artifactoryPublish.skip = false
+
+// Used by fake-billing-plugin
+apply plugin: 'maven-publish'
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      from components.java
+    }
+  }
+}
