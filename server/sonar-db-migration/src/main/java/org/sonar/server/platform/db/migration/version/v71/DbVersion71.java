@@ -35,6 +35,9 @@ public class DbVersion71 implements DbVersion {
       .add(2005, "Create table DEPRECATED_RULE_KEYS", CreateDeprecatedRuleKeysTable.class)
       .add(2006, "Clean orphans in Compute Engine child tables", CleanCeChildTablesOrphans.class)
       .add(2007, "Update PERMISSION_TEMPLATES.KEYS ", UpdatePermissionTooLongTemplateKeys.class)
+      .add(2008, "Add FILE_SOURCE.LINE_COUNT", AddFileSourceLineCount.class)
+      .add(2009, "Populate FILE_SOURCE.LINE_COUNT", PopulateFileSourceLineCount.class)
+      .add(2010, "Make FILE_SOURCE.LINE_COUNT not nullable", MakeFileSourceLineCountNotNullable.class)
     ;
   }
 }
