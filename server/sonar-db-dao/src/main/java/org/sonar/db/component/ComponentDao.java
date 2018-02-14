@@ -346,4 +346,8 @@ public class ComponentDao implements Dao {
   public List<KeyWithUuidDto> selectComponentKeysHavingIssuesToMerge(DbSession dbSession, String mergeBranchUuid) {
     return mapper(dbSession).selectComponentKeysHavingIssuesToMerge(mergeBranchUuid);
   }
+
+  public void scrollAllFilesForFileMove(DbSession session, String projectUuid, ResultHandler<FileMoveRowDto> handler) {
+    mapper(session).scrollAllFilesForFileMove(projectUuid, handler);
+  }
 }
