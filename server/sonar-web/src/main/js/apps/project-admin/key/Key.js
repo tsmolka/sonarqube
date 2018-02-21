@@ -55,22 +55,17 @@ class Key extends React.PureComponent {
     this.props.fetchProjectModules(this.props.component.key);
   }
 
-  handleChangeKey(key, newKey) {
-    return this.props
-      .changeKey(key, newKey)
-      .then(() => {
-        if (key === this.props.component.key) {
-          this.props.addGlobalSuccessMessage(translate('update_key.key_updated.reload'));
-          RecentHistory.remove(key);
-          reloadUpdateKeyPage(newKey);
-        } else {
-          this.props.addGlobalSuccessMessage(translate('update_key.key_updated'));
-        }
-      })
-      .catch(e => {
-        parseError(e).then(this.props.addGlobalErrorMessage);
-      });
-  }
+  handleChangeKey = (key, newKey) => {
+    return this.props.changeKey(key, newKey).then(() => {
+      if (key === this.props.component.key) {
+        this.props.addGlobalSuccessMessage(translate('update_key.key_updated.reload'));
+        RecentHistory.remove(key);
+        reloadUpdateKeyPage(newKey);
+      } else {
+        this.props.addGlobalSuccessMessage(translate('update_key.key_updated'));
+      }
+    });
+  };
 
   handleChangeTab(tab, e) {
     e.preventDefault();
@@ -96,7 +91,7 @@ class Key extends React.PureComponent {
 
         {noModules && (
           <div>
-            <UpdateForm component={component} onKeyChange={this.handleChangeKey.bind(this)} />
+            <UpdateForm component={component} onKeyChange={this.handleChangeKey} />
           </div>
         )}
 
@@ -131,7 +126,7 @@ class Key extends React.PureComponent {
               <FineGrainedUpdate
                 component={component}
                 modules={modules}
-                onKeyChange={this.handleChangeKey.bind(this)}
+                onKeyChange={this.handleChangeKey}
                 onSuccess={this.props.closeAllGlobalMessages}
                 onError={this.props.addGlobalErrorMessage}
               />

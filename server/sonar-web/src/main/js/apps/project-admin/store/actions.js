@@ -19,6 +19,7 @@
  */
 import { getProjectLinks, createLink } from '../../../api/projectLinks';
 import { getTree, changeKey as changeKeyApi } from '../../../api/components';
+import throwGlobalError from '../../../app/utils/throwGlobalError';
 
 export const RECEIVE_PROJECT_LINKS = 'projectAdmin/RECEIVE_PROJECT_LINKS';
 export const receiveProjectLinks = (projectKey, links) => ({
@@ -75,5 +76,8 @@ const changeKeyAction = (key, newKey) => ({
 });
 
 export const changeKey = (key, newKey) => dispatch => {
-  return changeKeyApi(key, newKey).then(() => dispatch(changeKeyAction(key, newKey)));
+  return changeKeyApi(key, newKey).then(
+    () => dispatch(changeKeyAction(key, newKey)),
+    throwGlobalError
+  );
 };

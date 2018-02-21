@@ -42,5 +42,5 @@ export function deleteLink(linkId: string): Promise<void> {
 export function createLink(projectKey: string, name: string, url: string): Promise<any> {
   const apiURL = '/api/project_links/create';
   const data = { projectKey, name, url };
-  return postJSON(apiURL, data).then(r => r.link);
+  return postJSON(apiURL, data).then(r => r.link, throwGlobalError);
 }
