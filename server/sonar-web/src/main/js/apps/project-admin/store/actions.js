@@ -17,7 +17,7 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-import { getProjectLinks, createLink } from '../../../api/projectLinks';
+import { getProjectLinks, createLink, deleteLink } from '../../../api/projectLinks';
 import { getTree, changeKey as changeKeyApi } from '../../../api/components';
 import throwGlobalError from '../../../app/utils/throwGlobalError';
 
@@ -29,9 +29,12 @@ export const receiveProjectLinks = (projectKey, links) => ({
 });
 
 export const fetchProjectLinks = projectKey => dispatch => {
-  getProjectLinks(projectKey).then(links => {
-    dispatch(receiveProjectLinks(projectKey, links));
-  });
+  getProjectLinks(projectKey).then(
+    links => {
+      dispatch(receiveProjectLinks(projectKey, links));
+    },
+    () => {}
+  );
 };
 
 export const ADD_PROJECT_LINK = 'projectAdmin/ADD_PROJECT_LINK';
@@ -48,11 +51,18 @@ export const createProjectLink = (projectKey, name, url) => dispatch => {
 };
 
 export const DELETE_PROJECT_LINK = 'projectAdmin/DELETE_PROJECT_LINK';
-export const deleteProjectLink = (projectKey, linkId) => ({
+export const deleteProjectLinkAction = (projectKey, linkId) => ({
   type: DELETE_PROJECT_LINK,
   projectKey,
   linkId
 });
+
+export function deleteProjectLink(projectKey, linkId) {
+  return dispatch =>
+    deleteLink(linkId).then(() => {
+      dispatch(deleteProjectLinkAction(projectKey, linkId));
+    });
+}
 
 export const RECEIVE_PROJECT_MODULES = 'projectAdmin/RECEIVE_PROJECT_MODULES';
 const receiveProjectModules = (projectKey, modules) => ({
@@ -63,9 +73,12 @@ const receiveProjectModules = (projectKey, modules) => ({
 
 export const fetchProjectModules = projectKey => dispatch => {
   const options = { qualifiers: 'BRC', s: 'name', ps: 500 };
-  getTree(projectKey, options).then(r => {
-    dispatch(receiveProjectModules(projectKey, r.components));
-  });
+  getTree(projectKey, options).then(
+    r => {
+      dispatch(receiveProjectModules(projectKey, r.components));
+    },
+    () => {}
+  );
 };
 
 export const CHANGE_KEY = 'projectAdmin/CHANGE_KEY';
