@@ -38,6 +38,7 @@ const ZERO_LINE = {
 export default class SourceViewerCode extends React.PureComponent {
   /*:: props: {|
     branch?: string,
+    componentKey: string,
     displayAllIssues: boolean,
     displayIssueLocationsCount?: boolean;
     displayIssueLocationsLink?: boolean;
@@ -60,7 +61,6 @@ export default class SourceViewerCode extends React.PureComponent {
     loadSourcesBefore: () => void,
     loadingSourcesAfter: boolean,
     loadingSourcesBefore: boolean,
-    onCoverageClick: (SourceLine, HTMLElement) => void,
     onDuplicationClick: (number, number) => void,
     onIssueChange: Issue => void,
     onIssueSelect: string => void,
@@ -151,6 +151,7 @@ export default class SourceViewerCode extends React.PureComponent {
     return (
       <Line
         branch={this.props.branch}
+        componentKey={this.props.componentKey}
         displayAllIssues={this.props.displayAllIssues}
         displayCoverage={displayCoverage}
         displayDuplications={displayDuplications}
@@ -171,7 +172,6 @@ export default class SourceViewerCode extends React.PureComponent {
         line={line}
         loadDuplications={this.props.loadDuplications}
         onClick={this.props.onLineClick}
-        onCoverageClick={this.props.onCoverageClick}
         onDuplicationClick={this.props.onDuplicationClick}
         onIssueChange={this.props.onIssueChange}
         onIssueSelect={this.props.onIssueSelect}

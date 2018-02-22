@@ -23,7 +23,6 @@ import classNames from 'classnames';
 import { intersection, uniqBy } from 'lodash';
 import SourceViewerHeader from './SourceViewerHeader';
 import SourceViewerCode from './SourceViewerCode';
-import CoveragePopupView from './popups/coverage-popup';
 import DuplicationPopupView from './popups/duplication-popup';
 import LineActionsPopupView from './popups/line-actions-popup';
 import SCMPopupView from './popups/scm-popup';
@@ -40,8 +39,7 @@ import {
   getComponentForSourceViewer,
   getComponentData,
   getSources,
-  getDuplications,
-  getTests
+  getDuplications
 } from '../../api/components';
 import { parseDate } from '../../helpers/dates';
 import { translate } from '../../helpers/l10n';
@@ -463,18 +461,6 @@ export default class SourceViewerBase extends React.PureComponent {
     });
   };
 
-  handleCoverageClick = (line /*: SourceLine */, element /*: HTMLElement */) => {
-    getTests(this.props.component, line.line, this.props.branch).then(tests => {
-      const popup = new CoveragePopupView({
-        line,
-        tests,
-        triggerEl: element,
-        branch: this.props.branch
-      });
-      popup.render();
-    });
-  };
-
   handleDuplicationClick = (index /*: number */, line /*: number */) => {
     const duplication = this.state.duplications && this.state.duplications[index];
     let blocks = (duplication && duplication.blocks) || [];
@@ -604,6 +590,7 @@ export default class SourceViewerBase extends React.PureComponent {
     return (
       <SourceViewerCode
         branch={this.props.branch}
+        componentKey={this.props.component}
         displayAllIssues={this.props.displayAllIssues}
         displayIssueLocationsCount={this.props.displayIssueLocationsCount}
         displayIssueLocationsLink={this.props.displayIssueLocationsLink}
@@ -626,7 +613,6 @@ export default class SourceViewerBase extends React.PureComponent {
         loadSourcesBefore={this.loadSourcesBefore}
         loadingSourcesAfter={this.state.loadingSourcesAfter}
         loadingSourcesBefore={this.state.loadingSourcesBefore}
-        onCoverageClick={this.handleCoverageClick}
         onDuplicationClick={this.handleDuplicationClick}
         onIssueChange={this.handleIssueChange}
         onIssueSelect={this.handleIssueSelect}

@@ -29,7 +29,7 @@ export interface BubblePopupPosition {
 interface Props {
   customClass?: string;
   children: React.ReactNode;
-  position: BubblePopupPosition;
+  position?: BubblePopupPosition;
 }
 
 export default function BubblePopup(props: Props) {

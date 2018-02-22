@@ -326,6 +326,19 @@ export interface ShortLivingBranch {
   type: BranchType.SHORT;
 }
 
+export interface SourceLine {
+  code: string;
+  conditions?: number;
+  coverageStatus?: string;
+  coveredConditions?: number;
+  duplicated: boolean;
+  line: number;
+  lineHits?: number;
+  scmAuthor?: string;
+  scmDate?: string;
+  scmRevision?: string;
+}
+
 export interface SourceViewerFile {
   canMarkAsFavorite?: boolean;
   key: string;

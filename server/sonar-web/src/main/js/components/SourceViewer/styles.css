@@ -94,7 +94,8 @@
 }
 
 .source-viewer pre,
-.source-meta {
+.source-line-number,
+.source-line-scm {
   line-height: 18px;
   font-family: Consolas, 'Liberation Mono', Menlo, Courier, monospace;
   font-size: var(--smallFontSize);
@@ -499,6 +500,11 @@
 .source-table + .source-viewer-more-code {
   border-bottom: none;
   border-top: 1px solid var(--barBorderColor);
+}
+
+.source-viewer-bubble-popup {
+  margin-top: -32px;
+  margin-left: 12px;
 }
 
 .issue-location {

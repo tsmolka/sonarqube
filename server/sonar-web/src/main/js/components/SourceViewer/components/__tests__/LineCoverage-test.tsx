@@ -17,30 +17,38 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-import React from 'react';
+import * as React from 'react';
 import { shallow } from 'enzyme';
-import { click } from '../../../../helpers/testUtils';
 import LineCoverage from '../LineCoverage';
+import { click } from '../../../../helpers/testUtils';
+import { SourceLine } from '../../../../app/types';
 
 it('render covered line', () => {
-  const line = { line: 3, coverageStatus: 'covered' };
-  const onClick = jest.fn();
-  const wrapper = shallow(<LineCoverage line={line} onClick={onClick} />);
+  const line: SourceLine = { line: 3, code: '', coverageStatus: 'covered', duplicated: false };
+  const wrapper = shallow(
+    <LineCoverage branch={undefined} componentKey="foo" line={line} />
+  ).dive();
   expect(wrapper).toMatchSnapshot();
   click(wrapper.find('[tabIndex]'));
-  expect(onClick).toHaveBeenCalled();
 });
 
 it('render uncovered line', () => {
-  const line = { line: 3, coverageStatus: 'uncovered' };
-  const onClick = jest.fn();
-  const wrapper = shallow(<LineCoverage line={line} onClick={onClick} />);
+  const line: SourceLine = { line: 3, code: '', coverageStatus: 'uncovered', duplicated: false };
+  const wrapper = shallow(<LineCoverage branch={undefined} componentKey="foo" line={line} />);
   expect(wrapper).toMatchSnapshot();
 });
 
 it('render line with unknown coverage', () => {
-  const line = { line: 3 };
-  const onClick = jest.fn();
-  const wrapper = shallow(<LineCoverage line={line} onClick={onClick} />);
+  const line: SourceLine = { line: 3, code: '', duplicated: false };
+  const wrapper = shallow(<LineCoverage branch={undefined} componentKey="foo" line={line} />);
   expect(wrapper).toMatchSnapshot();
+});
+
+it('should open coverage popup', () => {
+  const line: SourceLine = { line: 3, code: '', coverageStatus: 'covered', duplicated: false };
+  const wrapper = shallow(
+    <LineCoverage branch={undefined} componentKey="foo" line={line} />
+  ).dive();
+  click(wrapper.find('[role="button"]'));
+  expect(wrapper.find('CoveragePopup')).toMatchSnapshot();
 });

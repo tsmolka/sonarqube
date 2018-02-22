@@ -35,6 +35,7 @@ import LineCode from './LineCode';
 /*::
 type Props = {|
   branch?: string,
+  componentKey: string,
   displayAllIssues: boolean,
   displayCoverage: boolean,
   displayDuplications: boolean,
@@ -54,7 +55,6 @@ type Props = {|
   line: SourceLine,
   loadDuplications: SourceLine => void,
   onClick: (SourceLine, HTMLElement) => void,
-  onCoverageClick: (SourceLine, HTMLElement) => void,
   onDuplicationClick: (number, number) => void,
   onIssueChange: Issue => void,
   onIssueSelect: string => void,
@@ -119,7 +119,11 @@ export default class Line extends React.PureComponent {
         />
 
         {this.props.displayCoverage && (
-          <LineCoverage line={line} onClick={this.props.onCoverageClick} />
+          <LineCoverage
+            branch={this.props.branch}
+            componentKey={this.props.componentKey}
+            line={line}
+          />
         )}
 
         {this.props.displayDuplications && (
