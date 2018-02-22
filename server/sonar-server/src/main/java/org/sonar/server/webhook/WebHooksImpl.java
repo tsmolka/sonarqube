@@ -63,6 +63,10 @@ public class WebHooksImpl implements WebHooks {
     try (DbSession dbSession = dbClient.openSession(false)) {
       Optional<ComponentDto> componentDto = ofNullable(dbClient.componentDao().selectByUuid(dbSession, projectUuid).orNull());
       ComponentDto projectDto = checkStateWithOptional(componentDto, "the requested project '%s' was not found", projectUuid);
+      if (projectDto.getMainBranchProjectUuid() != null && projectDto.uuid().equals(projectDto.getMainBranchProjectUuid())) {
+        Optional<ComponentDto> mainBranchComponentDto = ofNullable(dbClient.componentDao().selectByUuid(dbSession, projectDto.getMainBranchProjectUuid()).orNull());
+        projectDto = checkStateWithOptional(mainBranchComponentDto, "the requested project '%s' was not found", projectUuid);
+      }
       WebhookDao dao = dbClient.webhookDao();
       return Stream.concat(
         dao.selectByProject(dbSession, projectDto).stream(),
