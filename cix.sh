@@ -16,12 +16,26 @@ case "$RUN_ACTIVITY" in
     DB_ENGINE=$(sed "s/run-db-integration-tests-//g" <<< $RUN_ACTIVITY | cut -d \- -f 1)
     CATEGORY=$(sed "s/run-db-integration-tests-//g" <<< $RUN_ACTIVITY | cut -d \- -f 2)
 
+    if [[ "$GITHUB_BRANCH" != "PULLREQUEST-"* ]] && [[ "$GITHUB_BRANCH" != "master" ]] && [[ "$GITHUB_BRANCH" != "branch-"* ]] && [[ "$GITHUB_BRANCH" != "dogfood-on-next" ]]; then
+      # do not execute QA tests on feature branch outside pull request
+      exit 0
+
+    elif [[ "$GITHUB_BRANCH" == "PULLREQUEST-"* ]] && [[ "$DB_ENGINE" != "postgresql93" ]]; then
+      # restrict QA tests to PostgreSQL on pull requests
+      exit 0
+
+    elif [[ "$GITHUB_BRANCH" == "dogfood-on-next" ]] && [[ "$DB_ENGINE" != "postgresql93" ]]; then
+      # restrict QA tests to PostgreSQL on dogfood branch
+      exit 0
+
+    else
       ./gradlew --no-daemon --console plain -i \
           :tests:integrationTest \
           -Dcategory="$CATEGORY" \
           -Dorchestrator.configUrl="http://infra.internal.sonarsource.com/jenkins/orch-$DB_ENGINE.properties" \
           -PbuildProfile=sonarsource-qa \
           -DbuildNumber=$CI_BUILD_NUMBER
+    fi
     ;;
 
   run-it-released-plugins)
