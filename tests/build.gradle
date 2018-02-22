@@ -7,16 +7,12 @@ configurations {
   sqZip
 }
 
-//UT are excluding in order for ITs to only run when needed
-test {
-  exclude '*'
-}
-/*sourceSets {
+sourceSets {
   integrationTest {
     java.srcDir 'src/it/java'
     resources.srcDir 'src/it/resources'
   }
-}*/
+}
 
 def pluginsForITs = [
     ':plugins:sonar-xoo-plugin',
