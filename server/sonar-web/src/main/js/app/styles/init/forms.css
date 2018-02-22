@@ -184,7 +184,7 @@ input[type='button']:disabled:focus {
   box-shadow: none !important;
 }
 
-.button svg {
+.button > svg {
   padding-top: calc((var(--controlHeight) - 16px - 2px) / 2);
 }
 
