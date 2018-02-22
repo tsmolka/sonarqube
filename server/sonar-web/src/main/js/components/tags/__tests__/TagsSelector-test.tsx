@@ -22,13 +22,14 @@ import { shallow } from 'enzyme';
 import TagsSelector, { validateTag } from '../TagsSelector';
 
 const props = {
-  position: { right: 0, top: 0 },
   listSize: 10,
-  tags: ['foo', 'bar', 'baz'],
-  selectedTags: ['bar'],
+  loading: false,
   onSearch: () => {},
   onSelect: () => {},
-  onUnselect: () => {}
+  onUnselect: () => {},
+  position: { right: 0, top: 0 },
+  selectedTags: ['bar'],
+  tags: ['foo', 'bar', 'baz']
 };
 
 it('should render with selected tags', () => {
@@ -37,7 +38,7 @@ it('should render with selected tags', () => {
 });
 
 it('should render without tags at all', () => {
-  expect(shallow(<TagsSelector {...props} tags={[]} selectedTags={[]} />)).toMatchSnapshot();
+  expect(shallow(<TagsSelector {...props} selectedTags={[]} tags={[]} />)).toMatchSnapshot();
 });
 
 it('should validate tags correctly', () => {

@@ -31,23 +31,42 @@ interface Props {
 }
 
 interface State {
+  loading: boolean;
   searchResult: string[];
 }
 
 const LIST_SIZE = 10;
 
 export default class MetaTagsSelector extends React.PureComponent<Props, State> {
-  state: State = { searchResult: [] };
+  mounted = false;
+  state: State = { loading: true, searchResult: [] };
 
   componentDidMount() {
+    this.mounted = true;
     this.onSearch('');
   }
 
+  componentWillUnmount() {
+    this.mounted = false;
+  }
+
   onSearch = (query: string) => {
+    this.setState({ loading: true });
     searchProjectTags({
       q: query,
       ps: Math.min(this.props.selectedTags.length - 1 + LIST_SIZE, 100)
-    }).then(result => this.setState({ searchResult: result.tags }), () => {});
+    }).then(
+      ({ tags }) => {
+        if (this.mounted) {
+          this.setState({ loading: false, searchResult: tags });
+        }
+      },
+      () => {
+        if (this.mounted) {
+          this.setState({ loading: false });
+        }
+      }
+    );
   };
 
   onSelect = (tag: string) => {
@@ -61,13 +80,14 @@ export default class MetaTagsSelector extends React.PureComponent<Props, State> 
   render() {
     return (
       <TagsSelector
-        position={this.props.position}
-        tags={this.state.searchResult}
-        selectedTags={this.props.selectedTags}
         listSize={LIST_SIZE}
+        loading={this.state.loading}
         onSearch={this.onSearch}
         onSelect={this.onSelect}
         onUnselect={this.onUnselect}
+        position={this.props.position}
+        selectedTags={this.props.selectedTags}
+        tags={this.state.searchResult}
       />
     );
   }

@@ -19,6 +19,7 @@ exports[`should render with selected tags 1`] = `
       ]
     }
     listSize={10}
+    loading={false}
     onSearch={[Function]}
     onSelect={[Function]}
     onUnselect={[Function]}
@@ -46,6 +47,7 @@ exports[`should render without tags at all 1`] = `
   <MultiSelect
     elements={Array []}
     listSize={10}
+    loading={false}
     onSearch={[Function]}
     onSelect={[Function]}
     onUnselect={[Function]}

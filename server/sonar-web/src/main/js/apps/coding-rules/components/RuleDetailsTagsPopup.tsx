@@ -32,14 +32,15 @@ interface Props {
 }
 
 interface State {
-  searchResult: any[];
+  loading: boolean;
+  searchResult: string[];
 }
 
 const LIST_SIZE = 10;
 
 export default class RuleDetailsTagsPopup extends React.PureComponent<Props, State> {
   mounted = false;
-  state: State = { searchResult: [] };
+  state: State = { loading: false, searchResult: [] };
 
   componentDidMount() {
     this.mounted = true;
@@ -51,6 +52,7 @@ export default class RuleDetailsTagsPopup extends React.PureComponent<Props, Sta
   }
 
   onSearch = (query: string) => {
+    this.setState({ loading: true });
     getRuleTags({
       q: query,
       ps: Math.min(this.props.tags.length + LIST_SIZE, 100),
@@ -59,10 +61,14 @@ export default class RuleDetailsTagsPopup extends React.PureComponent<Props, Sta
       tags => {
         if (this.mounted) {
           // systems tags can not be unset, don't display them in the results
-          this.setState({ searchResult: without(tags, ...this.props.sysTags) });
+          this.setState({ loading: false, searchResult: without(tags, ...this.props.sysTags) });
         }
       },
-      () => {}
+      () => {
+        if (this.mounted) {
+          this.setState({ loading: false });
+        }
+      }
     );
   };
 
@@ -77,13 +83,14 @@ export default class RuleDetailsTagsPopup extends React.PureComponent<Props, Sta
   render() {
     return (
       <TagsSelector
-        position={this.props.popupPosition || {}}
-        tags={this.state.searchResult}
-        selectedTags={this.props.tags}
         listSize={LIST_SIZE}
+        loading={this.state.loading}
         onSearch={this.onSearch}
         onSelect={this.onSelect}
         onUnselect={this.onUnselect}
+        position={this.props.popupPosition || {}}
+        selectedTags={this.props.tags}
+        tags={this.state.searchResult}
       />
     );
   }

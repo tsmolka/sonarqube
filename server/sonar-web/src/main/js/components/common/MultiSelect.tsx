@@ -23,21 +23,22 @@ import MultiSelectOption from './MultiSelectOption';
 import SearchBox from '../controls/SearchBox';
 
 interface Props {
-  selectedElements: Array<string>;
-  elements: Array<string>;
+  elements: string[];
   listSize?: number;
+  loading?: boolean;
   onSearch: (query: string) => void;
   onSelect: (item: string) => void;
   onUnselect: (item: string) => void;
-  validateSearchInput?: (value: string) => string;
   placeholder: string;
+  selectedElements: string[];
+  validateSearchInput?: (value: string) => string;
 }
 
 interface State {
-  query: string;
-  selectedElements: Array<string>;
-  unselectedElements: Array<string>;
   activeIdx: number;
+  query: string;
+  selectedElements: string[];
+  unselectedElements: string[];
 }
 
 interface DefaultProps {
@@ -59,10 +60,10 @@ export default class MultiSelect extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
+      activeIdx: 0,
       query: '',
       selectedElements: [],
-      unselectedElements: [],
-      activeIdx: 0
+      unselectedElements: []
     };
   }
 
@@ -122,14 +123,14 @@ export default class MultiSelect extends React.PureComponent<Props, State> {
   handleKeyboard = (evt: KeyboardEvent) => {
     switch (evt.keyCode) {
       case 40: // down
-        this.setState(this.selectNextElement);
         evt.stopPropagation();
         evt.preventDefault();
+        this.setState(this.selectNextElement);
         break;
       case 38: // up
-        this.setState(this.selectPreviousElement);
         evt.stopPropagation();
         evt.preventDefault();
+        this.setState(this.selectPreviousElement);
         break;
       case 37: // left
       case 39: // right
@@ -236,6 +237,7 @@ export default class MultiSelect extends React.PureComponent<Props, State> {
           <SearchBox
             autoFocus={true}
             className="little-spacer-top"
+            loading={this.props.loading}
             onChange={this.handleSearchChange}
             placeholder={this.props.placeholder}
             value={query}
